@@ -1,6 +1,4 @@
-function debounce(fn, timeout) {
-  let timer
-  return function(...args) {
-    
-  }
+let person = {
+  name: '',
+  age: 0
 }

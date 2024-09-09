@@ -1,57 +1,181 @@
+# 1 this 概念及其绑定规则
+* this 可以理解为一个指针, 指向调用函数的对象
 
-# 1 this 概念问题
-* 当一个函数被调用时，会创建一个活动记录（有时候也会被称之为执行上下文），这个记录会包含函数在哪里被调用（调用栈）、
-函数的调用方法，传入的参数等信息。this就是记录的其中的一个属性，会在函数执行的过程中用到
+* 关于this指向一共有四种绑定规则
 
-* this实际上就是函数在被调用时发生的绑定
-* this的绑定规则一般有四种
+## 1.1 默认绑定
+* 即使指独立函数的直接调用
+* 这时候this指向全局对象的，在浏览器环境中就是window
+* 在严格模式下，this的指向就是undefined
+```js
+var age = 11
+function foo() {
+  console.log(this.age)
+}
+foo() // 11
+```
 
-
-# 2 this 的绑定规则
-## 2.1 默认绑定
-* 独立函数调用，即直接使用，不加任何修饰（比如被其他对象调用）
-* 这个时候，函数里面的this是指向全局对象的
-* 当然，如果是严格模式，this会绑定到undefined
-
-
-## 2.2 隐式绑定
-* 当一个对象包含一个指向函数的属性时，并且通过这个属性调用函数，这个时候thisJ就会隐式的绑定到这个对象上面
-* 当函数被对象所调用的时候，无论这个对象的引用链有多长，this始终指向最后一次调用它的那个对象
-
-* 隐式丢失，最常见的是回调函数丢失this绑定，当一个函数a作为函数b的参数，并在函数b里面执行时
-* 执行时这个函数a其实相当于一个独立函数的调用：
+## 1.2 隐式绑定
+* 当某个对象调用函数时，函数内的this指向该对象，当有多个对象调用时，this永远指向最后调用它的那个对象
 ```js
 function foo() {
-  console.log( this.a );
+  console.log(this.name)
 }
-function doFoo(fn) {
-  // fn 其实引用的是 foo
-  fn(); // <-- 调用位置！
+
+let a = {
+  name: 'aaa',
+  foo,
 }
-var obj = {
-  a: 2,
-  foo: foo
-};
-var a = "oops, global"; // a 是全局对象的属性
-doFoo( obj.foo ); // "oops, global"
+
+let b = {
+  name: 'bbb',
+  obj: a,
+}
+
+b.obj.foo() // a
 ```
 
-# 2.3 显示绑定
-* 通过call,apply,bind, 可以函数中的this显示的绑定到对应的对象上面
+* 隐式绑定有一个大陷阱，便是绑定很容易丢失
+```js
+function sayHi(){
+  console.log('Hello,', this.name);
+}
+var person = {
+  name: 'YvetteLau',
+  sayHi: sayHi
+}
+var name = 'Wiliam';
+var Hi = person.sayHi;
+Hi();
+```
+* 上面这种情况，函数实际上是直接调用的，this直接指向全局对象
+* 补充一题
+```js
+function sayHi(){
+  console.log('Hello,', this.name);
+}
+var person1 = {
+  name: 'YvetteLau',
+  sayHi: function(){
+      setTimeout(function(){
+          console.log('Hello,',this.name);
+      })
+  }
+}
+var person2 = {
+  name: 'Christina',
+  sayHi: sayHi
+}
+var name='Wiliam';
+person1.sayHi(); // Wiliam   
+setTimeout(person2.sayHi,100); // wiliam
+setTimeout(function(){
+  person2.sayHi();
+},200); // Christina
+```
 
-# 2.4 new
-* 当使用new来调用一个函数时，或者说发生构造函数的调用时，会自动执行下面的操作
+## 1.3显示绑定
+* call, apply, bind
+
+### call
+* call()方法会以给定的this值和逐个参数来调用该函数
+* 使用方法fn.call(this, arg1, arg2, ...)
+
+* 手写call函数
+```js
+Function.prototype.call = function(target, ...args) {
+  // 首先判断调用call的是否是一个函数
+  if (typeof this !== 'function') {
+    throw new TypeError('Error')
+  }
+  
+  // 给参数加容错
+  // 在非严格模式下 null 和 undefined将会被替换成全局对象，并且将原始值转化为对象
+  // js特性 原始值调用方法会自动将其转化为对象
+  target = target || window
+  // target是一个对象，只需要在target中设置一个属性fn，使其指向调用call方法的原函数，再调用这个函数fn
+  // 这样就相当于 target对象 调用了原函数， 这是利用了this的隐式转化
+  target.fn = this
+  let result =  target.fn(...args)
+  return result
+}
 ```
-1. 创建（或者说构造）一个全新的对象。
-2. 这个新对象会被执行 [[ 原型 ]] 连接。
-3. 这个新对象会绑定到函数调用的 this。
-4. 如果函数没有返回其他对象，那么 new 表达式中的函数调用会自动返回这个新对象。
+
+### apply
+* apply()方法与call()方法类似，、只不过call()接收给函数传递的参数是一个个传入，而apply()是以数组的形式传入
+
+* 手写apply
+```js
+Function.prototype.apply = function(target) {
+  if (typeof this !== 'function') {
+    throw new TypeError('Error')
+  }
+
+  // 判断是否是数组
+  if (arguments[1] && !Array.isArray(arguments[1])) {
+    throw new TypeError('not array')
+  }
+
+  // 容错
+  target = target || window
+  // 隐式绑定
+  target.fn = this
+
+  let result = arguments[1] ? target.fn(...arguments[1]) : target.fn()
+  return result
+}
 ```
+
+### 手写bind
+* bing()是应该语法糖，它返回一个新函数，这个新函数会调用原始函数并将其this绑定为给定的值
+* 并且还可以传入一系列的参数，这些参数会插入调用新函数是传入的参数的前面
+
+* 手写bind()
 
 ```js
-function foo(a) {
-this.a = a;
+Function.prototype.bind = function(target) {
+  if (typeof this !== 'function') {
+    throw new TypeError('Error')
+  }
+
+  const args = Array.prototype.slice.call(arguments)
+
+  // 记录现在的this所指向的原函数
+  const _this = this
+  // 需要绑定的this
+  const newThis = args.shift()
+
+  return function(...newArgs) {
+    return _this.call(newThis, args, ...newArgs)
+  }
 }
-var bar = new foo(2);
-console.log( bar.a ); // 2
 ```
+
+
+## 1.4 new绑定
+* new的一个构造函数时的逻辑
+* 1 首选创建一个空对象
+* 2 重新指定原型链，使新对象能够访问到构造函数的原型
+* 3 将函数中的this指向这个新创建的对象
+
+* 手写new
+```js
+function _new(fn) {
+  if (typeof fn !== 'function') {
+    throw new TypeError('error')
+  }
+  let target = {}
+
+  const args = Array.prototype.slice.call(arguments, 1)
+
+  // 修改原型链
+  target.__proto__ = fn.prototype
+  // 重新绑定this
+  fn.call(target, args)
+
+  return target
+}
+```
+
+# 2 this绑定优先级
+new绑定 > 显式绑定 > 隐式绑定 > 默认绑定

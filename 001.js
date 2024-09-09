@@ -1,6 +1,8 @@
-function a(x, ...args) {
-  console.log(x)
-  console.log(args)
-}
-a(1)
-a(1,2,3)
+(function a() {
+  console.log(1+1)
+},function b() {
+  console.log(1+2)
+},
+function b() {
+  console.log(2+2)
+})()

@@ -1,15 +1,15 @@
-function _new(fn) {
-  if (typeof fn !== 'function') {
-    throw new TypeError('error')
-  }
-  let target = {}
+var a = 10;
+var foo = {
+   a: 20,
+   bar: function () {
+      var a = 30;
+      return this.a;
+   }
+};
 
-  const args = Array.prototype.slice.call(arguments, 1)
-
-  // 修改原型链
-  target.__proto__ = fn.prototype
-  // 重新绑定this
-  fn.call(target, args)
-
-  return target
-}
+console.log(
+   foo.bar(),             // ? 20
+   (foo.bar)(),           // ? 20
+   (foo.bar = foo.bar)(), // ? 
+   (foo.bar, foo.bar)()   // ?
+   );

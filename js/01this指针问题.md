@@ -171,9 +171,9 @@ function _new(fn) {
   // 修改原型链
   target.__proto__ = fn.prototype
   // 重新绑定this
-  fn.call(target, args)
+  let result = fn.apply(target, args)
 
-  return target
+  return typeof result === 'object'? result : target
 }
 ```
 

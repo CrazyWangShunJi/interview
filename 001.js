@@ -1,13 +1,10 @@
-let a = 0
-class A {
-  constructor() {
-    this.a = 1
-
+const myodule = (function() {
+  const privateVar = 'this is private'
+  return {
+    getPrivateVar: function() {
+      return privateVar
+    }
   }
-  x = () => {
-    console.log(this.a)
-  }
-}
+})()
 
-let out = new A()
-out.x()
+console.log(module.getPrivateVar())

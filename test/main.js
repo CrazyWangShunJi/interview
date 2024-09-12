@@ -1,14 +1,12 @@
-const p = new Promise((res, rej) => {
-  res(1);
-});
+const iifeModule = ((dependencyModule1, dependencyModule2) => {
+  let count = 0
 
-async function asyncReturn() {
-  return p;
-}
-
-function basicReturn() {
-  return Promise.resolve(p);
-}
-
-console.log(p === basicReturn()); // true
-console.log(p === asyncReturn()); // false
+  const obj = {
+    increase: () => ++count,
+    reset: () => {
+        count = 0
+    }
+  }
+  // ...dependencyModule1.xxx, dependencyModule2.xxx
+  return obj
+})(dependencyModule1, dependencyModule2)

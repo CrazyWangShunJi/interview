@@ -51,6 +51,7 @@ console.log(gen.next())
 * yield本身没有返回值，或者说总是返回undefined
 * 但是我们可是使用next来传递参数
 * next()函数可以带一个参数，该参数会被当做上一个yield表达式的值
+* 由此便实现了generator函数的内外部通信
 ```js
 function* helloWorld() {
   const res1 = yield 1 + 2

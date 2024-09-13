@@ -1,10 +1,7 @@
-const myodule = (function() {
-  const privateVar = 'this is private'
-  return {
-    getPrivateVar: function() {
-      return privateVar
-    }
-  }
-})()
+let a = 1
 
-console.log(module.getPrivateVar())
+if ( a === 2) {
+  require(['./a'], a => {
+    console.log(a)
+  })
+}

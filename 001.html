@@ -1,3 +1,43 @@
-<script src="animation.js"></script>
-<script src="mian.js"></script>
-<script src="tool.js"></script>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+   .container {
+      padding: 0px;
+      margin: 0px;
+      height: 2000px;
+      background-color: lightgray;
+    }
+
+   .sticky-element {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: blue;
+      color: white;
+      padding: 10px;
+      transition: top 0.3s ease-in-out;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sticky-element">这是一个会吸在顶部的元素</div>
+    <!-- 这里可以添加更多内容 -->
+  </div>
+
+  <script>
+    const stickyElement = document.querySelector('.sticky-element');
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 0) {
+        stickyElement.style.top = '0';
+      } else {
+        stickyElement.style.top = '-50px'; // 或者其他初始隐藏的位置
+      }
+    });
+  </script>
+</body>
+
+</html>

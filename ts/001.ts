@@ -1,23 +1,10 @@
-function zhaowa(target: Function): void {
-  target.prototype.startClass = function(): void {
+let someValue: unknown = "Hello, TypeScript!";
 
-  }
-}
+// 尖括号语法
+let strLength: number = (<string>someValue).length;
 
-function nameWrapper(target: any, key:string): void {
-  Object.definedProperty(target, key, {
-    
-  }) 
-}
+// as 语法
+let strLength2: number = (someValue as string).length;
 
-// 类装饰器
-@zhaowa
-class Class {
-  constructor() {
-    // 业务逻辑
-  }
-
-  //属性装饰器
-  @nameWrapper
-  name: string
-}
+console.log(strLength);  // 输出: 18
+console.log(strLength2); // 输出: 18

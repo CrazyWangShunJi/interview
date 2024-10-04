@@ -1,10 +1,15 @@
-let someValue: unknown = "Hello, TypeScript!";
+function Log(target: any, propertyKey: string) {
+  console.log(`Property ${propertyKey} is created.`);
+}
 
-// 尖括号语法
-let strLength: number = (<string>someValue).length;
+class Person {
+  @Log
+  name: string;
 
-// as 语法
-let strLength2: number = (someValue as string).length;
+  constructor(name: string) {
+    this.name = name;
+  }
+}
 
-console.log(strLength);  // 输出: 18
-console.log(strLength2); // 输出: 18
+// 输出: Property name is created.
+const person = new Person("Alice");

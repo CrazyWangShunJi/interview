@@ -1,15 +1,17 @@
-function Log(target: any, propertyKey: string) {
-  console.log(`Property ${propertyKey} is created.`);
-}
+import 'reflect-metadata'
+import router from './router'
+import express from 'express'
 
-class Person {
-  @Log
-  name: string;
+const app = express()
 
-  constructor(name: string) {
-    this.name = name;
-  }
-}
+app.use(express.json())
 
-// 输出: Property name is created.
-const person = new Person("Alice");
+// 接口逻辑
+app.get('/user/info', (req, res) => {
+  res.status(200).json({
+    message: '用户'
+  })
+})
+
+
+app.post('/user/login')

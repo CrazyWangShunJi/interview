@@ -1,28 +1,22 @@
 <template>
-  <div>
-    <ul>
-      <li v-for="item in items">{{ item.name }}</li>
-    </ul>
-    <button @click="moveFirstToEnd">Move First to End</button>
-  </div>
-</template>
+  <button @click='change("A")'>go to form</button>
+  <button @click='change("B")'>go to otherPage</button>
 
-<script>
-export default {
-  data() {
-    return {
-      items: [
-        { name: 'Apple' },
-        { name: 'Banana' },
-        { name: 'Cherry' }
-      ]
-    };
-  },
-  methods: {
-    moveFirstToEnd() {
-      const firstItem = this.items.shift(); // 移除第一个元素
-      this.items.push(firstItem); // 将其添加到列表末尾
-    }
-  }
+  <router-view v-slot="{ Component }">
+    <KeepAlive include="componentA">
+      <component :is="Component" />
+    </KeepAlive>
+  </router-view>
+</template>
+<script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+
+const change = (name: string) => {
+  router.push({name})
 }
 </script>
+<style lang="">
+  
+</style>

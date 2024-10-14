@@ -15,15 +15,10 @@
 function reactive(target) {
   return new Proxy(target, {
     get(target, key, receiver) {
-      // 获取劫持对象的属性的值
-      const result = Reflect.get(target, key, receiver)
-
       // 收集依赖，当某个响应式对象被读取时，它就会记录哪个地方使用到了该数据，即依赖
       track(target, key)
 
-      // 如果属性是对象，继续递归遍历
-      // 如果是基础属性，直接返回，由此实现深层次嵌套的响应式
-      return typeof target[key] === 'object'? reactive(result) : result
+      return Reflect.get(target, key, receiver)
     },
 
     set(target, key, value, receiver) {
@@ -37,6 +32,8 @@ function reactive(target) {
         // 内容发生改变，触发依赖
         trigger(target, key)
       }
+
+      return result
     }
   })
 }

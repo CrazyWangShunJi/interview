@@ -42,3 +42,26 @@ onErrorCaptured((error, instance, info) => {
 #### 9、onMounted
 * 组件已经从 DOM 中移除，组件实例销毁后触发。
 * 在组件彻底销毁后进行清理工作，通常是清理外部资源（如事件监听、全局状态等）。
+
+# 父子组件的生命周期：
+父 onBeforeCreate
+|
+父 onCreated
+| 
+子 onBeforeCreate
+|
+子 onCreated
+|
+父 onBeforeMount ( 这个hook在前，是因为父组件需要将vonode传递给子组件 插槽的实现原理)
+|
+子 onBeforeMount
+|
+子 onMounted
+|
+父 mounted
+
+* 更新顺序
+Parent beforeUpdate
+Child beforeUpdate
+Child updated
+Parent updated

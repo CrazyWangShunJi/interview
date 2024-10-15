@@ -5,15 +5,28 @@
 </head>
 
 <body>
-  <input id="inp"></inp>
-
+  <div id="A">A</div>
+  <div id="B">B</div>
   <script>
+    function reactive(obj) {
+      return new Proxy(obj, {
+        get(target, key) {
+          //....
 
-    const inp = document.getElementById('inp');
-    inp.addEventListener('change', function() {
-      console.log('111')
-    })
+          track()
+        },
+        set(target, key, value) {
+          // ....
 
+          trigger()
+        }
+      })
+
+    }
+
+    function trigger() {
+      effect(cb)
+    } 
   </script>
 </body>
 

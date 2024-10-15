@@ -1,28 +1,31 @@
-<template>
-  <div>
-    Form
-  </div>
-  <br></br>
+<script lang="jsx">
+import { ref } from 'vue';
 
-  <input v-model="name" placeholder="name">
-  <br></br>
+// 定义一个计数器状态
+const count = ref(0);
 
-  <input v-model="age" placeholder="age">
-</template>
-<script setup lang="ts">
-import { ref, onActivated, onDeactivated } from 'vue'
+// 定义一个增加计数器的函数
+const increment = () => {
+  count.value++;
+};
 
-const name = ref<string>('name')
-const age = ref<number>(18)
+// 定义一个项目列表
+const items = ['Vue', 'React', 'Angular'];
 
-onActivated(() => {
-  console.log('ComponentA is activated')
-})
+// 渲染函数
+const render = () => {
+  return (
+    <div>
+      <h1>this jsx</h1>
+      <p>Counter: { count.value }</p>
+      <button onClick={increment}>increment</button>
+      <ul>
+        {items.map(item => (<li key={item}>{item}</li>))}
+      </ul>
+    </div>
+  )
+};
 
-onDeactivated(() => {
-  console.log('ComponentA is deactivated')
-})
+export default render
 </script>
-<style lang="less">
-  
-</style>
+

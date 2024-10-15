@@ -1,21 +1,12 @@
 <template>
-  <button @click='change("A")'>go to form</button>
-  <button @click='change("B")'>go to otherPage</button>
-
-  <router-view v-slot="{ Component }">
-    <KeepAlive include="componentA">
-      <component :is="Component" />
-    </KeepAlive>
-  </router-view>
+  <div>
+    <componentA>
+    </componentA>
+  </div>
 </template>
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
+import componentA from './components/A/componentA.vue';
 
-const change = (name: string) => {
-  router.push({name})
-}
 </script>
 <style lang="">
   
